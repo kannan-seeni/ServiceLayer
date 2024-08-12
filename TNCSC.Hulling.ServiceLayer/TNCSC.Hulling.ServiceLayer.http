@@ -1,0 +1,6 @@
+@TNCSC.Hulling.ServiceLayer_HostAddress = http://localhost:5269
+
+GET {{TNCSC.Hulling.ServiceLayer_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
