@@ -151,6 +151,8 @@ builder.Services.AddTransient<IFRKService, FRKService>();
 builder.Services.AddTransient<IFRKRepository, FRKRepository>();
 builder.Services.AddTransient<IMillService, MillService>();
 builder.Services.AddTransient<IMillRepository, MillRepository>();
+builder.Services.AddTransient<IMasterDataService, MasterDataService>();
+builder.Services.AddTransient<IMasterDataRepository, MasterDataRepository>();
 #endregion
 
 #region JWT

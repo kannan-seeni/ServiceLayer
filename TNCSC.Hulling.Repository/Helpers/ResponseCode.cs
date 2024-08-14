@@ -50,7 +50,7 @@
         public const int UnableToUpdatePaddyDetails = 13007;
         public const int ExceptionOccursInUpdatingPaddyDetails = 13008;
 
-        //Paddy 14000-141000
+        //Rice 14000-141000
 
         public const int RiceDetailsAddedSuccessfully = 14000;
         public const int UnableToAddRiceDetails = 14001;
@@ -64,7 +64,7 @@
         public const int UnableToUpdateRiceDetails = 14007;
         public const int ExceptionOccursInUpdatinRiceDetails = 14008;
 
-        //Paddy 15000-151000
+        //Gunny 15000-151000
 
         public const int GunnyDetailsAddedSuccessfully = 15000;
         public const int UnableToAddGunnyDetails = 15001;
@@ -78,7 +78,7 @@
         public const int UnableToUpdateGunnyDetails = 15007;
         public const int ExceptionOccursInUpdatingGunnyDetails = 15008;
 
-        //Paddy 16000-161000
+        //FRK 16000-161000
 
         public const int FRKDetailsAddedSuccessfully = 16000;
         public const int UnableToAddFRKDetails = 16001;
@@ -92,6 +92,7 @@
         public const int UnableToUpdateFRKDetails = 16007;
         public const int ExceptionOccursInUpdatingFRKDetails = 16008;
 
+        //Mill 17000-171000
 
         public const int MillDetailsAddedSuccessfully = 17000;
         public const int UnableToAddMillDetails = 17001;
@@ -105,5 +106,23 @@
         public const int MillDetailsUpdatedSuccessfully = 17007;
         public const int UnableToUpdateMillDetails = 17008;
         public const int ExceptionOccursInUpdatingMillDetails = 17009;
+
+
+        //Mill 18000-181000
+        public const int GCAddedOrUpdatedSuccessfully = 18000;
+        public const int UnableToAddOrUpdateGC = 18001;
+        public const int ExceptionOccursInAddingOrUpdatingGC = 18002;
+
+        public const int VarietyAddOrUpdatedSuccessfully = 18003;
+        public const int UnableToAddOrUpdateVariety = 18004;
+        public const int ExceptionOccursInAddingOrUpdatingVariety = 18005;
+         
+        public const int GCsRetrivedSuccessfully = 18006;
+        public const int NoGCsFound = 18007;
+        public const int ExceptionOccursInGetGCs = 18008;
+
+        public const int VarietyRetrivedSuccessfully = 18009;
+        public const int NoVarietyFound = 18010;
+        public const int ExceptionOccursInGetVariety = 18011;
     }
 }

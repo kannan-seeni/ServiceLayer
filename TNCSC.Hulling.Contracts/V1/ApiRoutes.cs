@@ -108,6 +108,8 @@
 
             public const string updateGunnyDetails = Base + "/Gunnys/Update";
 
+          //  public const string addGunnyCondition = Base + "/GunnysCondition/Add";
+
         }
         #endregion
 
@@ -140,6 +142,24 @@
             public const string getMillDetails = Base + "/Mill/{id}";
              
             public const string updateMillDetails = Base + "/Mill/Update";
+
+
+        }
+        #endregion
+
+        #region MasterData
+        public static class MasterData
+        {
+
+            public const string addGC = Base + "/MasterData/Add";
+
+            public const string  gunnyCondition = Base + "/MasterData/GC/Add";
+
+            public const string getAllGCDetails = Base + "/MasterData/GunnyCondition";
+
+            public const string addVariety = Base + "/MasterData/Variety";
+
+            public const string getAllVarietyDetails = Base + "/MasterData/Variety";
 
 
         }
