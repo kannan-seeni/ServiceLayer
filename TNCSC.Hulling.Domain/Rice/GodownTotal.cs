@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace TNCSC.Hulling.Domain.Rice
 {
-    public class GodwonTotal
+    public class GodownTotal
     {
-        public string Godwon { get; set; }
+        public string Godown { get; set; }
         public int Bags { get; set; }
         public decimal Weight { get; set; }
     }

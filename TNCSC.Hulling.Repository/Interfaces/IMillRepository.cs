@@ -9,5 +9,6 @@ namespace TNCSC.Hulling.Repository.Interfaces
         public Task<APIResponse> GetMillDetailsByMillId(long millId);
         public Task<APIResponse> GetAllMills();
         public Task<APIResponse> UpdateMillDetails(Mill millObj);
+        public Task<APIResponse> ActiveOrInActivateMill(long millId, bool status);
     }
 }

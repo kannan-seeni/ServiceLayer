@@ -48,7 +48,7 @@ namespace TNCSC.Hulling.Repository.Services
 
                     parameters.Add("@userId", paddyObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", paddyObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", paddyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", paddyObj.GodownRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", paddyObj.PaddyReceivedDate, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@month", formatedMonth, DbType.String, ParameterDirection.Input);
                     parameters.Add("@kms", paddyObj.KMS, DbType.String, ParameterDirection.Input);
@@ -257,7 +257,7 @@ namespace TNCSC.Hulling.Repository.Services
                     parameters.Add("@id", paddyObj.Id, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@userId", paddyObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", paddyObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", paddyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", paddyObj.GodownRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", paddyObj.PaddyReceivedDate, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@month", formatedMonth, DbType.String, ParameterDirection.Input);
                     parameters.Add("@kms", paddyObj.KMS, DbType.String, ParameterDirection.Input);

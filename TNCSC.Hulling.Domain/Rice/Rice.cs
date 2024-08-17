@@ -9,11 +9,11 @@
         public long Id { get; set; }
         public long UserRefId { get; set; }
         public long MillRefId { get; set; }
-        public long GodwonRefId { get; set; }
+        public long GodownRefId { get; set; }
         public DateTime Date { get; set; }
         public string KMS { get; set; }
         public string TruckMemoNo { get; set; }
-        public string Godwon { get; set; }
+        public string Godown { get; set; }
         public string Variety { get; set; }
         public int NoOfBags { get; set; }
         public decimal WeightOfRice { get; set; }

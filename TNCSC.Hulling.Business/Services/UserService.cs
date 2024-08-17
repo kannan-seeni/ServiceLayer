@@ -75,5 +75,16 @@ namespace TNCSC.Hulling.Business.Services
             return await userRepository.GetUsersByMillId(millId);
         }
         #endregion
+
+        #region ActiveOrInActivateUser
+        /// <summary>
+        /// ActiveOrInActivateUser
+        /// </summary>
+        /// <returns></returns>
+        public async Task<APIResponse> ActiveOrInActivateUser(long id, bool status)
+        {
+            return await userRepository.ActiveOrInActivateUser(id, status);
+        }
+        #endregion
     }
 }

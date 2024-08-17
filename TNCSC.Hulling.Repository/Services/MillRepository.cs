@@ -255,6 +255,45 @@ namespace TNCSC.Hulling.Repository.Services
 
         }
 
+        #region ActiveOrInActivateMill
+        public async Task<APIResponse> ActiveOrInActivateMill(long millId, bool status)
+        {
+            APIResponse aPIResponse = new APIResponse();
+            aPIResponse.version = sVersion;
+
+            try
+            {
+
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@id", millId, DbType.Int64, ParameterDirection.Input);
+                parameters.Add("@status", status, DbType.Boolean, ParameterDirection.Input);
+                parameters.Add("@modifiedBy", this.UserId, DbType.Int64, ParameterDirection.Input);
+
+                var user = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_ActiveOrInActivateMill", parameters, commandType: CommandType.StoredProcedure);
+                aPIResponse.data = user;
+                aPIResponse.responseCode = ResponseCode.ActiveOrInactiveMillSuccessfully;
+                return aPIResponse;
+
+            }
+            catch (Exception ex)
+            {
+                LoggerModel logmodel = new LoggerModel();
+                logmodel.AdditionalInfo = "MillRepository:ActiveOrInActivateMill";
+                logmodel.ExecptionDetails = ex;
+                logmodel.ResponseCode = ResponseCode.ExceptionOccursInActiveOrInactiveMill;
+                logmodel.CreatedBy = this.UserId.ToString(); logmodel.UserID = this.UserId.ToString();
+                _Logger.Log(LogType.Error, logmodel);
+                aPIResponse.responseCode = ResponseCode.ExceptionOccursInActiveOrInactiveMill;
+                aPIResponse.error = new ErrorModel(ex.Message, ResponseCode.ExceptionOccursInActiveOrInactiveMill);
+                return aPIResponse;
+                throw;
+            }
+
+
+        }
+        #endregion
+
+
         #endregion
     }
 }

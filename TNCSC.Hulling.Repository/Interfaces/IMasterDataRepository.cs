@@ -7,7 +7,7 @@ namespace TNCSC.Hulling.Repository.Interfaces
     {
         public Task<APIResponse> AddOrUpdateGunnyCondition(GunnyCondition gunnyCondition);
         public Task<APIResponse> GetGunnyConditions();
-        public Task<APIResponse> AddOrUpdateVarieryAndGrade(Variety variety);
+        public Task<APIResponse> AddOrUpdateVarieryAndGrade(Grades variety);
         public Task<APIResponse> GetVarietyandGrades();
     }
 }

@@ -21,19 +21,25 @@
         public const int NoUsersFound = 11004;
         public const int ExceptionOccursInGetUserDetails = 11005;
 
-        //Godwon 12000-121000
+        public const int ActiveOrInactiveUserSuccessfully = 11006; 
+        public const int ExceptionOccursActiveOrInactiveUser = 11007;
 
-        public const int GodwonAddedSuccessfully = 12000;
-        public const int UnableToAddGodwon = 12001;
-        public const int ExceptionOccursInAddingGodwon = 12003;
+        //Godown 12000-121000
 
-        public const int GodwonDetailsRetrivedSuccessfully = 12003;
-        public const int NoGodwonsFound = 12004;
-        public const int ExceptionOccursInGetGodwonDetails = 12005;
+        public const int GodownAddedSuccessfully = 12000;
+        public const int UnableToAddGodown = 12001;
+        public const int ExceptionOccursInAddingGodown = 12003;
 
-        public const int GodwonUpdatedSuccessfully = 12006;
-        public const int UnableToUpdateGodwon = 12007;
-        public const int ExceptionOccursInUpdatingGodwon = 12008;
+        public const int GodownDetailsRetrivedSuccessfully = 12003;
+        public const int NoGodownsFound = 12004;
+        public const int ExceptionOccursInGetGodownDetails = 12005;
+
+        public const int GodownUpdatedSuccessfully = 12006;
+        public const int UnableToUpdateGodown = 12007;
+        public const int ExceptionOccursInUpdatingGodown = 12008;
+
+        public const int ActiveOrInactiveGodownSuccessfully = 12009;
+        public const int ExceptionOccursInActiveOrInactiveGodown = 12010;
 
 
         //Paddy 13000-131000
@@ -107,6 +113,8 @@
         public const int UnableToUpdateMillDetails = 17008;
         public const int ExceptionOccursInUpdatingMillDetails = 17009;
 
+        public const int ActiveOrInactiveMillSuccessfully = 17010; 
+        public const int ExceptionOccursInActiveOrInactiveMill = 17011;
 
         //Mill 18000-181000
         public const int GCAddedOrUpdatedSuccessfully = 18000;

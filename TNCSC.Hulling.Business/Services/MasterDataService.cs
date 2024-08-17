@@ -2,7 +2,7 @@
 using TNCSC.Hulling.Domain;
 using TNCSC.Hulling.Domain.MasterData;
 using TNCSC.Hulling.Repository.Interfaces;
-using Variety = TNCSC.Hulling.Domain.MasterData.Variety;
+using Grades = TNCSC.Hulling.Domain.MasterData.Grades;
 
 namespace TNCSC.Hulling.Business.Services
 {
@@ -20,7 +20,7 @@ namespace TNCSC.Hulling.Business.Services
              return await masterDataRepository.AddOrUpdateGunnyCondition(gunnyCondition);
         }
 
-        public async Task<APIResponse> AddOrUpdateVarieryAndGrade(Variety variety)
+        public async Task<APIResponse> AddOrUpdateVarieryAndGrade(Grades variety)
         {
             return await masterDataRepository.AddOrUpdateVarieryAndGrade(variety);
         }

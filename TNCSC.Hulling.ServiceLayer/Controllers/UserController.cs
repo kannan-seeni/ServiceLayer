@@ -48,7 +48,7 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             var response = await userService.GetAllUser();
-             
+
             return Ok(response);
 
         }
@@ -82,7 +82,21 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
         }
 
         #endregion
- 
+
+        #region ActiveOrInActivateUser
+
+        [HttpPut(ApiRoutes.User.activeOrInactiveUser)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> ActiveOrInActivateUser([FromRoute] long id, [FromRoute] bool status)
+        {
+            var response = await userService.ActiveOrInActivateUser(id, status);
+
+            return Ok(response);
+
+        }
+
+        #endregion
+
 
     }
 }

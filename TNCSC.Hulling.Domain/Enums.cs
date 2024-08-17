@@ -5,8 +5,8 @@
     /// </summary>
     public class Enums
     {
-        #region GodwonType
-        public enum GodwonType
+        #region GodownType
+        public enum GodownType
         {
             Paddy = 1,
             Rice = 2,

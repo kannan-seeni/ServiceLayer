@@ -7,9 +7,9 @@ using TNCSC.Hulling.Components;
 using TNCSC.Hulling.Components.Interfaces;
 using TNCSC.Hulling.Components.Models;
 using TNCSC.Hulling.Domain;
-using TNCSC.Hulling.Domain.MasterData;
 using TNCSC.Hulling.Repository.Helpers;
 using TNCSC.Hulling.Repository.Interfaces;
+using Grades = TNCSC.Hulling.Domain.MasterData.Grades;
 using GunnyCondition = TNCSC.Hulling.Domain.MasterData.GunnyCondition;
 using Variety = TNCSC.Hulling.Domain.MasterData.Variety;
 
@@ -109,43 +109,44 @@ namespace TNCSC.Hulling.Repository.Services
             }
 
         }
-        public async Task<APIResponse> AddOrUpdateVarieryAndGrade(Domain.MasterData.Variety variety)
+        public async Task<APIResponse> AddOrUpdateVarieryAndGrade(Domain.MasterData.Grades grade)
         {
             APIResponse aPIResponse = new APIResponse();
             aPIResponse.version = sVersion;
 
             try
             {
-                if (variety != null)
+                if (grade != null)
                 {
-                    DynamicParameters parameters = new DynamicParameters();
+                    DynamicParameters parameter = new DynamicParameters();
 
-                    parameters.Add("@id", variety.Id, DbType.Int32, ParameterDirection.Input);
-                    parameters.Add("@variety", variety.VarietyName, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@status", variety.Status, DbType.Boolean, ParameterDirection.Input);
-                    parameters.Add("@_id", -1, DbType.Int32, ParameterDirection.Output);
+                    parameter.Add("@id", grade.Id, DbType.Int32, ParameterDirection.Input);
+                    parameter.Add("@grade", grade.Grade, DbType.String, ParameterDirection.Input);
+                    parameter.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
+                    parameter.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
+                    parameter.Add("@status", grade.Status, DbType.Boolean, ParameterDirection.Input);
+                    
+                    parameter.Add("@_id", -1, DbType.Int32, ParameterDirection.Output);
+                    var grades = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_AddOrUpdateGrade", parameter, commandType: CommandType.StoredProcedure);
+                   
+                    var Id = parameter.Get<Int32>("@_id");
 
-                    var response = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_AddOrUpdateVariety", parameters, commandType: CommandType.StoredProcedure);
-
-                    var Id = parameters.Get<Int32>("@_id");
-
-                    if (variety.Grade != null && variety.Grade.Count() > 0)
+                    if (grade.Variety != null && grade.Variety.Count() > 0)
                     {
-                        foreach (var item in variety.Grade)
+                        foreach (var item in grade.Variety)
                         {
-                            DynamicParameters parameter = new DynamicParameters();
+                            DynamicParameters parameters = new DynamicParameters();
 
-                            parameter.Add("@id", item.Id, DbType.Int32, ParameterDirection.Input);
-                            parameter.Add("@grade", item.Grade, DbType.String, ParameterDirection.Input);
-                            parameter.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
-                            parameter.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
-                            parameter.Add("@status", item.Status, DbType.Boolean, ParameterDirection.Input);
-                            parameter.Add("@varietyId", Id, DbType.Int64, ParameterDirection.Input);
-                            parameter.Add("@_id", -1, DbType.Int32, ParameterDirection.Output);
-                            
-                            var grades = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_AddOrUpdateGrade", parameter, commandType: CommandType.StoredProcedure);
+                            parameters.Add("@id", item.Id, DbType.Int32, ParameterDirection.Input);
+                            parameters.Add("@variety", item.VarietyName, DbType.String, ParameterDirection.Input);
+                            parameters.Add("@gradeId", Id, DbType.Int64, ParameterDirection.Input);
+                            parameters.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
+                            parameters.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
+                            parameters.Add("@status", item.Status, DbType.Boolean, ParameterDirection.Input);
+                            parameters.Add("@_id", -1, DbType.Int32, ParameterDirection.Output);
+
+                            var response = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_AddOrUpdateVariety", parameters, commandType: CommandType.StoredProcedure);
+
                         }
                     }
                     aPIResponse.responseCode = ResponseCode.VarietyAddOrUpdatedSuccessfully;
@@ -238,30 +239,30 @@ namespace TNCSC.Hulling.Repository.Services
         {
             APIResponse aPIResponse = new APIResponse();
             aPIResponse.version = sVersion;
-            List<Variety> varieties = new List<Variety>();
+            List<Grades> varieties = new List<Grades>();
            
             try
             {
                 DynamicParameters parameters = new DynamicParameters();
                  
                 var response = await SqlMapper.QueryMultipleAsync((SqlConnection)connection, "SP_GetVarietyWithGrades", parameters, commandType: CommandType.StoredProcedure);
-                List<Variety> variety = response.Read<Variety>().ToList();
+      
                 List<Grades> grade = response.Read<Grades>().ToList();
-
+                List<Variety> variety = response.Read<Variety>().ToList();
                 if (variety != null && variety.Count() > 0)
                 {
-                    foreach(var vr in variety)
+                    foreach(var gr in grade)
                     {
-                        Variety data = new Variety();
-                        List<Grades> gr = new List<Grades>();
-                        data = vr;
-                        var groupedItems = grade
-                         .Where(item => item.VarietyId == vr.Id);
+                        Grades data = new Grades();
+                        List<Variety> vr = new List<Variety>();
+                        data = gr;
+                        var groupedItems = variety
+                         .Where(item => item.GradeId == gr.Id);
                         if(groupedItems != null && groupedItems.Count() > 0)
                         { 
-                            gr = groupedItems.ToList();
-                            data.Grade = new List<Grades>();
-                            data.Grade.AddRange(gr);
+                            vr = groupedItems.ToList();
+                            data.Variety = new List<Variety>();
+                            data.Variety.AddRange(vr);
                         }
                         varieties.Add(data);
                     }

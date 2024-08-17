@@ -4,7 +4,7 @@
     {
         public List<RiceReportDetails> details { get; set; }
         public ReportData total {  get; set; }
-        public List<GodwonTotal> godwonTotal { get; set; }
+        public List<GodownTotal> godownTotal { get; set; }
 
     }
 }

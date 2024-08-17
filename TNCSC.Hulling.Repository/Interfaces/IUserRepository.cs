@@ -13,5 +13,6 @@ namespace TNCSC.Hulling.Repository.Interfaces
         public Task<APIResponse> GetUsersByMillId(long millId);
         public Task<APIResponse> GetUserDetailsById(long id);
         public Task<APIResponse> GetAllUser();
+        public Task<APIResponse> ActiveOrInActivateUser(long userId, bool status);
     }
 }

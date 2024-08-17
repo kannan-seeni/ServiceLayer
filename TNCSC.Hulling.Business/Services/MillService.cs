@@ -5,7 +5,7 @@ using TNCSC.Hulling.Repository.Interfaces;
 
 namespace TNCSC.Hulling.Business.Services
 {
-    public class MillService :IMillService
+    public class MillService : IMillService
     {
         protected IMillRepository millRepository;
 
@@ -14,9 +14,9 @@ namespace TNCSC.Hulling.Business.Services
             this.millRepository = millRepository;
         }
 
-        public async  Task<APIResponse> AddNewMill(Mill millObj)
+        public async Task<APIResponse> AddNewMill(Mill millObj)
         {
-             return await millRepository.AddNewMill(millObj);
+            return await millRepository.AddNewMill(millObj);
         }
 
         public async Task<APIResponse> GetAllMills()
@@ -32,6 +32,11 @@ namespace TNCSC.Hulling.Business.Services
         public async Task<APIResponse> UpdateMillDetails(Mill millObj)
         {
             return await millRepository.UpdateMillDetails(millObj);
+        }
+
+        public async Task<APIResponse> ActiveOrInActivateMill(long millId, bool status)
+        {
+            return await millRepository.ActiveOrInActivateMill(millId, status);
         }
     }
 }

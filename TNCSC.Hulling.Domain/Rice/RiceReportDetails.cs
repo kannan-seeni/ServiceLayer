@@ -4,7 +4,7 @@
     {
         public long Id { get; set; }
         public DateTime Date { get; set; }
-        public string Godwon { get; set; }
+        public string Godown { get; set; }
         public string ADNo { get; set; }
         public string TruckNo { get; set; }
         public string LorryNo { get; set; } 

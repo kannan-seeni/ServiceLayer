@@ -44,11 +44,11 @@ namespace TNCSC.Hulling.Repository.Services
 
                     parameters.Add("@userId", riceObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", riceObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", riceObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", riceObj.GodownRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", riceObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", riceObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@truckMomeNo", riceObj.TruckMemoNo, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@godwon", riceObj.Godwon, DbType.String, ParameterDirection.Input);
+                    parameters.Add("@godown", riceObj.Godown, DbType.String, ParameterDirection.Input);
                     parameters.Add("@variety", riceObj.Variety, DbType.String, ParameterDirection.Input);
                     parameters.Add("@noOfBags", riceObj.NoOfBags, DbType.Int32, ParameterDirection.Input);
                     parameters.Add("@weightOfRice", riceObj.WeightOfRice, DbType.Decimal, ParameterDirection.Input);
@@ -265,11 +265,11 @@ namespace TNCSC.Hulling.Repository.Services
                     parameters.Add("@id", riceObj.Id, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@userId", riceObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", riceObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", riceObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", riceObj.GodownRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", riceObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", riceObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@truckMomeNo", riceObj.TruckMemoNo, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@godwon", riceObj.Godwon, DbType.String, ParameterDirection.Input);
+                    parameters.Add("@godown", riceObj.Godown, DbType.String, ParameterDirection.Input);
                     parameters.Add("@variety", riceObj.Variety, DbType.String, ParameterDirection.Input);
                     parameters.Add("@noOfBags", riceObj.NoOfBags, DbType.Int32, ParameterDirection.Input);
                     parameters.Add("@weightOfRice", riceObj.WeightOfRice, DbType.Decimal, ParameterDirection.Input);
@@ -352,12 +352,12 @@ namespace TNCSC.Hulling.Repository.Services
                 {
                     riceMonthReport.adtMonthReport = new RiceReport();
                     ReportData adtTotal = new ReportData();
-                    List<GodwonTotal> adtGodwonTotal = new List<GodwonTotal>();
+                    List<GodownTotal> adtGodwonTotal = new List<GodownTotal>();
                     adtTotal = response.Read<ReportData>().First();
-                    adtGodwonTotal = response.Read<GodwonTotal>().ToList();
+                    adtGodwonTotal = response.Read<GodownTotal>().ToList();
                     riceMonthReport.adtMonthReport.details = adtRiceDetails;
                     riceMonthReport.adtMonthReport.total = adtTotal;
-                    riceMonthReport.adtMonthReport.godwonTotal = adtGodwonTotal;
+                    riceMonthReport.adtMonthReport.godownTotal = adtGodwonTotal;
                 }
                 
                 crRiceDetails = response.Read<RiceReportDetails>().ToList();
@@ -366,12 +366,12 @@ namespace TNCSC.Hulling.Repository.Services
                 {
                     riceMonthReport.crMonthReport = new RiceReport();
                     ReportData crTotal = new ReportData();
-                    List<GodwonTotal> crGodwonTotal = new List<GodwonTotal>();
+                    List<GodownTotal> crGodwonTotal = new List<GodownTotal>();
                     crTotal = response.Read<ReportData>().First();
-                    crGodwonTotal = response.Read<GodwonTotal>().ToList();
+                    crGodwonTotal = response.Read<GodownTotal>().ToList();
                     riceMonthReport.crMonthReport.details = crRiceDetails;
                     riceMonthReport.crMonthReport.total = crTotal;
-                    riceMonthReport.crMonthReport.godwonTotal = crGodwonTotal;
+                    riceMonthReport.crMonthReport.godownTotal = crGodwonTotal;
                 }
                    
 

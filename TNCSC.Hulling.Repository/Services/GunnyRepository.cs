@@ -42,11 +42,11 @@ namespace TNCSC.Hulling.Repository.Services
 
                     parameters.Add("@userRefId", gunnyObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millRefId", gunnyObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonRefId", gunnyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownRefId", gunnyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", gunnyObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", gunnyObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@truckMomeNo", gunnyObj.TruckMemoNo, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@godwon", gunnyObj.Godwon, DbType.String, ParameterDirection.Input); 
+                    parameters.Add("@godown", gunnyObj.Godwon, DbType.String, ParameterDirection.Input); 
                     parameters.Add("@noOfBags", gunnyObj.NoOfBags, DbType.Int32, ParameterDirection.Input); 
                     parameters.Add("@adNo", gunnyObj.ADNo, DbType.String, ParameterDirection.Input);
                     parameters.Add("@adDate", gunnyObj.ADDate, DbType.DateTime, ParameterDirection.Input);
@@ -252,11 +252,11 @@ namespace TNCSC.Hulling.Repository.Services
                     parameters.Add("@id", gunnyObj.Id, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@userRefId", gunnyObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millRefId", gunnyObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonRefId", gunnyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownRefId", gunnyObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", gunnyObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", gunnyObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@truckMomeNo", gunnyObj.TruckMemoNo, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@godwon", gunnyObj.Godwon, DbType.String, ParameterDirection.Input);
+                    parameters.Add("@godown", gunnyObj.Godwon, DbType.String, ParameterDirection.Input);
                     parameters.Add("@noOfBags", gunnyObj.NoOfBags, DbType.Int32, ParameterDirection.Input);
                     parameters.Add("@adNo", gunnyObj.ADNo, DbType.String, ParameterDirection.Input);
                     parameters.Add("@adDate", gunnyObj.ADDate, DbType.DateTime, ParameterDirection.Input);

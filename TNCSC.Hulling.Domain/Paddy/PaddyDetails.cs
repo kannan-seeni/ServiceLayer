@@ -9,7 +9,7 @@
         public long Id { get; set; }
         public string MillId { get; set; }
         public string MillName { get; set; }
-        public string Godwon { get; set; }
+        public string Godown { get; set; }
         public DateTime Date { get; set; }
         public string Month { get; set; }
         public string KMS { get; set; }

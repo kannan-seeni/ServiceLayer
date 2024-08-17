@@ -10,7 +10,7 @@ namespace TNCSC.Hulling.Domain.Paddy
     {
         public long Id { get; set; }  
         public DateTime Date { get; set; }
-        public string Godwon { get; set; } 
+        public string Godown { get; set; } 
         public string IssueMemoNo { get; set; }
         public string LorryNo { get; set; }
         public string Variety { get; set; }

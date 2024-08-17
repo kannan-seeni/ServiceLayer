@@ -3,38 +3,38 @@ using Microsoft.AspNetCore.Mvc;
 using TNCSC.Hulling.Business.Interfaces;
 using TNCSC.Hulling.Components.Filters;
 using TNCSC.Hulling.Contracts.V1;
-using TNCSC.Hulling.Domain.Godwon;
+using TNCSC.Hulling.Domain.Godown;
 using TNCSC.Hulling.ServiceLayer.Filters;
 #endregion
 
 namespace TNCSC.Hulling.ServiceLayer.Controllers
 {
     /// <summary>
-    /// GodwonController
+    /// GodownController
     /// </summary>
     [SkipMyGlobalActionFilter]
     public class GodownController : Controller
     {
         #region Declarations
 
-        protected IGodwonService godwonServices;
+        protected IGodownService godownServices;
         #endregion
 
         #region Constructor
 
-        public GodownController(IGodwonService _godwonServices)
+        public GodownController(IGodownService _godownServices)
         {
-            godwonServices = _godwonServices;
+            godownServices = _godownServices;
         }
         #endregion
 
-        #region AddNewGodwon
+        #region AddNewGodown
 
         [HttpPost(ApiRoutes.Godown.addNewGodwon)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> AddNewGodwon([FromBody] Godwon godwonObj)
+        public async Task<IActionResult> AddNewGodown([FromBody] Godown godownObj)
         {
-            var response = await godwonServices.AddNewGodwon(godwonObj);
+            var response = await godownServices.AddNewGodown(godownObj);
 
             return Ok(response);
 
@@ -42,13 +42,13 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #endregion
 
-        #region GetAllGodwons
+        #region GetAllGodowns
 
         [HttpGet(ApiRoutes.Godown.getAllGodwons)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> GetAllGodwons()
+        public async Task<IActionResult> GetAllGodowns()
         {
-            var response = await godwonServices.GetAllGodwons();
+            var response = await godownServices.GetAllGodowns();
 
             return Ok(response);
 
@@ -56,13 +56,13 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #endregion
 
-        #region GetGodwonByMillId
+        #region GetGodownDetailsByRegion
 
-        [HttpGet(ApiRoutes.Godown.getGodwonByMillId)]
+        [HttpGet(ApiRoutes.Godown.getGodwonByRegionId)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> GetGodwonByMillId([FromRoute] long millId, [FromRoute] int typeId)
+        public async Task<IActionResult> GetGodownDetailsByRegion([FromRoute] int Id, [FromRoute] int typeId)
         {
-            var response = await godwonServices.GetGodwonDetailsByMillId(millId, typeId);
+            var response = await godownServices.GetGodownDetailsByRegion(Id, typeId);
 
             return Ok(response);
 
@@ -70,13 +70,13 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #endregion
 
-        #region GetGodwonById
+        #region GetGodownDetailsById
 
         [HttpGet(ApiRoutes.Godown.getGodwonDetails)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> GetGodwonById([FromRoute] long id)
+        public async Task<IActionResult> GetGodownDetailsById([FromRoute] long id)
         {
-            var response = await godwonServices.GetGodwonDetailsById(id);
+            var response = await godownServices.GetGodownDetailsById(id);
 
             return Ok(response);
 
@@ -84,13 +84,26 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #endregion
 
-        #region GetGodwonById
+        #region UpdateGodwonDetails
 
         [HttpPut(ApiRoutes.Godown.updateGodwonDetails)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> UpdateGodwonDetails([FromBody] Godwon godwonObj)
+        public async Task<IActionResult> UpdateGodwonDetails([FromBody] Godown godownObj)
         {
-            var response = await godwonServices.UpdateGodwonDetails(godwonObj);
+            var response = await godownServices.UpdateGodownDetails(godownObj);
+
+            return Ok(response);
+
+        }
+        #endregion
+
+        #region ActiveOrInActivateGodown
+
+        [HttpPut(ApiRoutes.Godown.activeOrInactiveGodown)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> ActiveOrInActivateGodown([FromRoute]long godownId,bool status)
+        {
+            var response = await godownServices.ActiveOrInActivateGodown(godownId, status);
 
             return Ok(response);
 

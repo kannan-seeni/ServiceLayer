@@ -42,7 +42,7 @@ namespace TNCSC.Hulling.Repository.Services
 
                     parameters.Add("@userId", frkObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", frkObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", frkObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", frkObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", frkObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", frkObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@memoIssueNo", frkObj.IssueMemoNo, DbType.String, ParameterDirection.Input);
@@ -242,7 +242,7 @@ namespace TNCSC.Hulling.Repository.Services
                     parameters.Add("@id", frkObj.Id, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@userId", frkObj.UserRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@millId", frkObj.MillRefId, DbType.Int64, ParameterDirection.Input);
-                    parameters.Add("@godwonId", frkObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@godownId", frkObj.GodwonRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@date", frkObj.Date, DbType.DateTime, ParameterDirection.Input);
                     parameters.Add("@kms", frkObj.KMS, DbType.String, ParameterDirection.Input);
                     parameters.Add("@memoIssueNo", frkObj.IssueMemoNo, DbType.String, ParameterDirection.Input);

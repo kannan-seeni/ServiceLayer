@@ -33,6 +33,8 @@
 
             public const string getUserByMillId = Base + "/User/mill/{millId}";
 
+            public const string activeOrInactiveUser = Base + "/User/Active/InActive/{id}/{status}";
+
         }
         #endregion
 
@@ -46,10 +48,11 @@
 
             public const string getGodwonDetails = Base + "/Godown/{id}";
 
-            public const string getGodwonByMillId = Base + "/Godown/mill/{millId}/{typeId}";
+            public const string getGodwonByRegionId = Base + "/Godown/region/{Id}/{typeId}";
 
             public const string updateGodwonDetails = Base + "/Godown/Update";
 
+            public const string activeOrInactiveGodown = Base + "/Godown/Active/InActive/{godownId}/{status}";
 
         }
         #endregion
@@ -107,8 +110,7 @@
             public const string getGunnyByMillId = Base + "/Gunnys/mill/{millId}";
 
             public const string updateGunnyDetails = Base + "/Gunnys/Update";
-
-          //  public const string addGunnyCondition = Base + "/GunnysCondition/Add";
+             
 
         }
         #endregion
@@ -140,9 +142,10 @@
             public const string getAllMillDetails = Base + "/Mill";
 
             public const string getMillDetails = Base + "/Mill/{id}";
-             
+
             public const string updateMillDetails = Base + "/Mill/Update";
 
+            public const string activeOrInactiveMill = Base + "/Mill/Active/InActive/{millId}/{status}";
 
         }
         #endregion
@@ -153,7 +156,7 @@
 
             public const string addGC = Base + "/MasterData/Add";
 
-            public const string  gunnyCondition = Base + "/MasterData/GC/Add";
+            public const string gunnyCondition = Base + "/MasterData/GC/Add";
 
             public const string getAllGCDetails = Base + "/MasterData/GunnyCondition";
 

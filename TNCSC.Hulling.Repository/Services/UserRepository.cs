@@ -27,7 +27,7 @@ namespace TNCSC.Hulling.Repository.Services
         public UserRepository(IHttpContextAccessor httpContentAccessor, IConfiguration objConfig, IConfigManager configManager, ILogger logger, IDbConnection connection)
             : base(httpContentAccessor, objConfig, configManager, logger, connection)
         {
-             
+
         }
         #endregion
 
@@ -40,19 +40,19 @@ namespace TNCSC.Hulling.Repository.Services
             aPIResponse.version = sVersion;
             try
             {
-             
-                if(userObj != null)
-                { 
-                     
+
+                if (userObj != null)
+                {
+
                     DynamicParameters parameters = new DynamicParameters();
 
                     parameters.Add("@password", userObj.Password, DbType.String, ParameterDirection.Input);
                     parameters.Add("@firstName", userObj.FirstName, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@lastName", userObj.LastName, DbType.String, ParameterDirection.Input); 
+                    parameters.Add("@lastName", userObj.LastName, DbType.String, ParameterDirection.Input);
                     parameters.Add("@millId", userObj.MillRefId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@emailId", userObj.EmailId, DbType.String, ParameterDirection.Input);
                     parameters.Add("@mobileNo", userObj.MobileNo, DbType.String, ParameterDirection.Input);
-                    parameters.Add("@roleId", userObj.Role, DbType.String, ParameterDirection.Input); 
+                    parameters.Add("@roleId", userObj.Role, DbType.String, ParameterDirection.Input);
                     parameters.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@modifiedBy", this.UserId, DbType.Int64, ParameterDirection.Input);
                     parameters.Add("@status", true, DbType.Boolean, ParameterDirection.Input);
@@ -60,7 +60,7 @@ namespace TNCSC.Hulling.Repository.Services
                     parameters.Add("@userId", "", DbType.String, ParameterDirection.Output);
 
                     var id = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_CreateUser", parameters, commandType: CommandType.StoredProcedure);
-                    
+
                     var Id = parameters.Get<Int64>("@id");
                     var userID = parameters.Get<string>("@userId");
                     IDictionary<string, string> response = new Dictionary<string, string>();
@@ -78,10 +78,10 @@ namespace TNCSC.Hulling.Repository.Services
                     aPIResponse.responseCode = ResponseCode.UnableToCreateUser;
                     return aPIResponse;
                 }
-                
+
 
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 LoggerModel logmodel = new LoggerModel();
                 logmodel.AdditionalInfo = "UserRepository:CreateUser";
@@ -107,16 +107,16 @@ namespace TNCSC.Hulling.Repository.Services
             aPIResponse.version = sVersion;
             List<User> userDetails = new List<User>();
             try
-            { 
+            {
                 DynamicParameters parameters = new DynamicParameters();
                 parameters.Add("@millrefId", millId, DbType.Int64, ParameterDirection.Input);
                 parameters.Add("@status", true, DbType.Boolean, ParameterDirection.Input);
 
-               var  user = await SqlMapper.QueryAsync<User>((SqlConnection)connection, "SP_GetUsersByMillId", parameters, commandType: CommandType.StoredProcedure);
+                var user = await SqlMapper.QueryAsync<User>((SqlConnection)connection, "SP_GetUsersByMillId", parameters, commandType: CommandType.StoredProcedure);
 
                 if (user != null && user.Count() > 0)
                 {
-                    userDetails= user.ToList();
+                    userDetails = user.ToList();
                     aPIResponse.data = userDetails;
                     aPIResponse.responseCode = ResponseCode.UserDetailsRetrivedSuccessfully;
                 }
@@ -124,7 +124,7 @@ namespace TNCSC.Hulling.Repository.Services
                 {
                     aPIResponse.data = userDetails;
                     aPIResponse.responseCode = ResponseCode.NoUsersFound;
-                } 
+                }
                 return aPIResponse;
 
             }
@@ -154,7 +154,7 @@ namespace TNCSC.Hulling.Repository.Services
             User userDetails = new User();
 
             try
-            { 
+            {
                 DynamicParameters parameters = new DynamicParameters();
                 parameters.Add("@userId", id, DbType.Int64, ParameterDirection.Input);
                 parameters.Add("@status", true, DbType.Boolean, ParameterDirection.Input);
@@ -163,12 +163,12 @@ namespace TNCSC.Hulling.Repository.Services
 
                 if (user != null)
                 {
-                    userDetails = user; 
+                    userDetails = user;
                     aPIResponse.responseCode = ResponseCode.UserDetailsRetrivedSuccessfully;
                 }
                 else
                 {
-                    
+
                     aPIResponse.responseCode = ResponseCode.NoUsersFound;
                 }
                 aPIResponse.data = userDetails;
@@ -202,18 +202,18 @@ namespace TNCSC.Hulling.Repository.Services
 
             try
             {
-                
+
                 DynamicParameters parameters = new DynamicParameters();
-                
+
                 var user = await SqlMapper.QueryAsync<User>((SqlConnection)connection, "SP_GetAllUsers", parameters, commandType: CommandType.StoredProcedure);
 
                 if (user != null && user.Count() > 0)
                 {
-                    userDetails = user.ToList(); 
+                    userDetails = user.ToList();
                     aPIResponse.responseCode = ResponseCode.UserDetailsRetrivedSuccessfully;
                 }
                 else
-                { 
+                {
                     aPIResponse.responseCode = ResponseCode.NoUsersFound;
                 }
                 aPIResponse.data = userDetails;
@@ -238,6 +238,46 @@ namespace TNCSC.Hulling.Repository.Services
 
         }
         #endregion
+
+        #region ActiveOrInActivateUser
+        public async Task<APIResponse> ActiveOrInActivateUser(long userId, bool status)
+        {
+            APIResponse aPIResponse = new APIResponse();
+            aPIResponse.version = sVersion;
+
+            try
+            {
+
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@id", userId, DbType.Int64, ParameterDirection.Input);
+                parameters.Add("@status", status, DbType.Boolean, ParameterDirection.Input);
+                parameters.Add("@modifiedBy", this.UserId, DbType.Int64, ParameterDirection.Input);
+
+                var user = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_ActiveOrInActivateUser", parameters, commandType: CommandType.StoredProcedure);
+                aPIResponse.data = user;
+                aPIResponse.responseCode = ResponseCode.ActiveOrInactiveUserSuccessfully;
+                return aPIResponse;
+
+            }
+            catch (Exception ex)
+            {
+                LoggerModel logmodel = new LoggerModel();
+                logmodel.AdditionalInfo = "UserRepository:ActiveOrInActivateUser";
+                logmodel.ExecptionDetails = ex;
+                logmodel.ResponseCode = ResponseCode.ExceptionOccursActiveOrInactiveUser;
+                logmodel.CreatedBy = this.UserId.ToString(); logmodel.UserID = this.UserId.ToString();
+                _Logger.Log(LogType.Error, logmodel);
+                aPIResponse.responseCode = ResponseCode.ExceptionOccursActiveOrInactiveUser;
+                aPIResponse.error = new ErrorModel(ex.Message, ResponseCode.ExceptionOccursActiveOrInactiveUser);
+                return aPIResponse;
+                throw;
+            }
+
+
+        }
+        #endregion
+
+
 
         #endregion
     }

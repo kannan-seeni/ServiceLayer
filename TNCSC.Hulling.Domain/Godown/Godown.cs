@@ -1,15 +1,16 @@
-﻿namespace TNCSC.Hulling.Domain.Godwon
+﻿namespace TNCSC.Hulling.Domain.Godown
 {
     /// <summary>
-    /// GodwonDetails
+    /// Godown
     /// </summary>
-    public class GodwonDetails
+    public class Godown
     {
         #region Properties
         public long Id { get; set; }
-        public string GodwonId { get; set; }
-        public string GodwonName { get; set; }
-        public string MillName { get; set; }
+        public string GodownId { get; set; }
+        public int RegionId { get; set; }  
+        public string GodownName { get; set; }
+        public Enums.GodownType godownType { get; set; }
         public string EmailId { get; set; }
         public string MobileNo { get; set; }
         public string GSTNo { get; set; }
@@ -21,7 +22,8 @@
         public int Distance { get; set; }
         public string AQName { get; set; }
         public string Superintendent { get; set; }
-        public string UserName { get; set; }
+        public long UserRefId { get; set; }
         #endregion
+
     }
 }

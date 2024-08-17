@@ -9,7 +9,7 @@
         public long Id { get; set; }
         public long UserRefId { get; set; }
         public long MillRefId { get; set; }
-        public long GodwonRefId { get; set; }
+        public long GodownRefId { get; set; }
         public DateTime PaddyReceivedDate { get; set; } 
         public string Month { get; set; }
         public string KMS { get; set; }

@@ -48,7 +48,7 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         [HttpPost(ApiRoutes.MasterData.addVariety)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> AddOrUpdateVarieryAndGrade([FromBody] Variety variety)
+        public async Task<IActionResult> AddOrUpdateVarieryAndGrade([FromBody] Grades variety)
         {
             var response = await masterDataService.AddOrUpdateVarieryAndGrade(variety);
 

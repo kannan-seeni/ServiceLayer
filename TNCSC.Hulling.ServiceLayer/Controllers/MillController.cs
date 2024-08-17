@@ -53,7 +53,7 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         [HttpGet(ApiRoutes.Mill.getMillDetails)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> GetMillDetailsByMillId([FromRoute]long id)
+        public async Task<IActionResult> GetMillDetailsByMillId([FromRoute] long id)
         {
             var response = await millService.GetMillDetailsByMillId(id);
 
@@ -63,8 +63,6 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #endregion
 
-
-
         #region UpdateMillDetails
 
         [HttpPut(ApiRoutes.Mill.updateMillDetails)]
@@ -72,6 +70,19 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
         public async Task<IActionResult> UpdateMillDetails([FromBody] Mill millObj)
         {
             var response = await millService.UpdateMillDetails(millObj);
+
+            return Ok(response);
+
+        }
+        #endregion
+
+        #region ActiveOrInActivateMill
+
+        [HttpPut(ApiRoutes.Mill.activeOrInactiveMill)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> ActiveOrInActivateMill([FromRoute] long millId, [FromRoute] bool status)
+        {
+            var response = await millService.ActiveOrInActivateMill(millId, status);
 
             return Ok(response);
 

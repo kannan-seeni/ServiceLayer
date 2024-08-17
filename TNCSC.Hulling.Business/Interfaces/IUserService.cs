@@ -43,5 +43,15 @@ namespace TNCSC.Hulling.Business.Interfaces
         /// <returns></returns>
         public Task<APIResponse> GetAllUser();
         #endregion
+
+        #region  ActiveOrInActivateUser
+        /// <summary>
+        /// ActiveOrInActivateUser
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public Task<APIResponse> ActiveOrInActivateUser(long userId, bool status);
+        #endregion
     }
 }
