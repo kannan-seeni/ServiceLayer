@@ -19,16 +19,16 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #region AddOrUpdateGunnyCondition
 
-        //[HttpPut(ApiRoutes.MasterData.gunnyCondition)]
-        //[ServiceFilter(typeof(AuditAttribute))]
-        //public async Task<IActionResult> AddOrUpdateGunnyCondition([FromBody] GunnyCondition gunnyCondition)
-        //{
-        //    var response = await masterDataService.AddOrUpdateGunnyCondition(gunnyCondition);
+        [HttpPost(ApiRoutes.MasterData.gunnyCondition)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> AddOrUpdateGunnyCondition([FromBody] GunnyCondition gunnyCondition)
+        {
+            var response = await masterDataService.AddOrUpdateGunnyCondition(gunnyCondition);
 
-        //    return Ok(response);
+            return Ok(response);
 
-        //}
-       
+        }
+
         #endregion
 
         #region GetGunnyConditions
@@ -65,6 +65,46 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
         public async Task<IActionResult> GetVarietyandGrades()
         {
             var response = await masterDataService.GetVarietyandGrades();
+
+            return Ok(response);
+
+        }
+        #endregion
+
+        #region AddOrUpdateRegion
+
+        [HttpPost(ApiRoutes.MasterData.addRegion)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> AddOrUpdateRegion([FromBody] Region region)
+        {
+            var response = await masterDataService.AddOrUpdateRegion(region);
+
+            return Ok(response);
+
+        }
+
+        #endregion
+
+        #region GetAllRegion
+
+        [HttpGet(ApiRoutes.MasterData.getAllRegionDetails)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> GetAllRegion()
+        {
+            var response = await masterDataService.GetAllRegion();
+
+            return Ok(response);
+
+        }
+        #endregion
+
+        #region GetAllRegionById
+
+        [HttpGet(ApiRoutes.MasterData.getAllRegionDetailsById)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> GetAllRegionById([FromRoute] int id)
+        {
+            var response = await masterDataService.GetAllRegionById(id);
 
             return Ok(response);
 

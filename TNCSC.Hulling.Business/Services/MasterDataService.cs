@@ -17,7 +17,7 @@ namespace TNCSC.Hulling.Business.Services
 
         public async Task<APIResponse> AddOrUpdateGunnyCondition(GunnyCondition gunnyCondition)
         {
-             return await masterDataRepository.AddOrUpdateGunnyCondition(gunnyCondition);
+            return await masterDataRepository.AddOrUpdateGunnyCondition(gunnyCondition);
         }
 
         public async Task<APIResponse> AddOrUpdateVarieryAndGrade(Grades variety)
@@ -33,6 +33,21 @@ namespace TNCSC.Hulling.Business.Services
         public async Task<APIResponse> GetVarietyandGrades()
         {
             return await masterDataRepository.GetVarietyandGrades();
+        }
+
+        public async Task<APIResponse> AddOrUpdateRegion(Region region)
+        {
+            return await masterDataRepository.AddOrUpdateRegion(region);
+        }
+
+        public async Task<APIResponse> GetAllRegion()
+        {
+            return await masterDataRepository.GetAllRegion();
+        }
+
+        public async Task<APIResponse> GetAllRegionById(int id)
+        {
+            return await masterDataRepository.GetAllRegionById(id);
         }
     }
 }

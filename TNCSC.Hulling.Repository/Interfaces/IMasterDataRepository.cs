@@ -9,5 +9,8 @@ namespace TNCSC.Hulling.Repository.Interfaces
         public Task<APIResponse> GetGunnyConditions();
         public Task<APIResponse> AddOrUpdateVarieryAndGrade(Grades variety);
         public Task<APIResponse> GetVarietyandGrades();
+        public Task<APIResponse> AddOrUpdateRegion(Region region);
+        public Task<APIResponse> GetAllRegion();
+        public Task<APIResponse> GetAllRegionById(int id);
     }
 }

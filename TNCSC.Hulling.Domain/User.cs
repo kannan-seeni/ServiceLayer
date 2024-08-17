@@ -16,6 +16,7 @@
         public string EmailId { get; set; }
         public string MobileNo { get; set; }
         public int Role { get; set; }
+        public string Region { get; set; }
         [SwaggerIgnore]
         public long CreatedBy { get; set; }
         [SwaggerIgnore]

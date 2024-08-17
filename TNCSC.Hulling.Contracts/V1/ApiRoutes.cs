@@ -156,13 +156,19 @@
 
             public const string addGC = Base + "/MasterData/Add";
 
-            public const string gunnyCondition = Base + "/MasterData/GC/Add";
+            public const string gunnyCondition = Base + "/MasterData/GunnyCondition/Add";
 
             public const string getAllGCDetails = Base + "/MasterData/GunnyCondition";
 
-            public const string addVariety = Base + "/MasterData/Variety";
+            public const string addVariety = Base + "/MasterData/Variety/Add";
 
             public const string getAllVarietyDetails = Base + "/MasterData/Variety";
+
+            public const string addRegion = Base + "/MasterData/Region/Add";
+
+            public const string getAllRegionDetails = Base + "/MasterData/Region";
+
+            public const string getAllRegionDetailsById = Base + "/MasterData/Region/{id}";
 
 
         }

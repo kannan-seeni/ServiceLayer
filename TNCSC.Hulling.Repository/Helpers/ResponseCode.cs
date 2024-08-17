@@ -132,5 +132,13 @@
         public const int VarietyRetrivedSuccessfully = 18009;
         public const int NoVarietyFound = 18010;
         public const int ExceptionOccursInGetVariety = 18011;
+
+        public const int RegionAddedOrUpdatedSuccessfully = 18012;
+        public const int UnableToAddOrUpdateRegion = 18013;
+        public const int ExceptionOccursInAddingOrUpdatingRegion = 18013;
+
+        public const int RegionDetailsRetrivedSuccessfully = 18014;
+        public const int NoRegionFound = 18015;
+        public const int ExceptionOccursInGetRegionDetails = 18016;
     }
 }

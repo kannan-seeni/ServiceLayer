@@ -7,15 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Godwon\**" />
+    <EmbeddedResource Remove="Godwon\**" />
+    <None Remove="Godwon\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <EditorConfigFiles Remove="C:\Users\Kannan S\source\repos\SrcInGit\TNCSC.Hulling.Domain\Godwon\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\Kannan S\source\repos\SrcInGit\TNCSC.Hulling.Domain\Godwon\.editorconfig" />
   </ItemGroup>
 
 </Project>

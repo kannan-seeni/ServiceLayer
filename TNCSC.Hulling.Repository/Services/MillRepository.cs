@@ -104,7 +104,7 @@ namespace TNCSC.Hulling.Repository.Services
         {
             APIResponse aPIResponse = new APIResponse();
             aPIResponse.version = sVersion;
-            List<Mill> millDetails = new List<Mill>();
+            Mill millDetails = new Mill();
             try
             {
                 DynamicParameters parameters = new DynamicParameters();
@@ -115,7 +115,7 @@ namespace TNCSC.Hulling.Repository.Services
 
                 if (user != null && user.Count() > 0)
                 {
-                    millDetails = user.ToList();
+                    millDetails = user.ToList().SingleOrDefault();
                     aPIResponse.data = millDetails;
                     aPIResponse.responseCode = ResponseCode.MillDetailsRetrivedSuccessfully;
                 }
@@ -144,9 +144,8 @@ namespace TNCSC.Hulling.Repository.Services
 
         }
         #endregion
-
-
-        #region GetAllUser
+         
+        #region GetAllMills
         public async Task<APIResponse> GetAllMills()
         {
             APIResponse aPIResponse = new APIResponse();
