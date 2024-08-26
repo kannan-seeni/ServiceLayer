@@ -12,5 +12,7 @@ namespace TNCSC.Hulling.Repository.Interfaces
         public Task<APIResponse> AddOrUpdateRegion(Region region);
         public Task<APIResponse> GetAllRegion();
         public Task<APIResponse> GetAllRegionById(int id);
+
+        public Task<APIResponse> GetBillingReportDetails();
     }
 }

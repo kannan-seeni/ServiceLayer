@@ -101,7 +101,7 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
                     ID = _authResult.user.ID,
                     MillId = _authResult.user.MillRefId.ToString(),
                     UserName = _authResult.user.FirstName + " " + _authResult.user.LastName,
-                    Role = _authResult.user.Role.ToString(),
+                    Role = _authResult.user.Role.ToString(), 
                     Region = _authResult.user.Region.ToString(),
 
                 });

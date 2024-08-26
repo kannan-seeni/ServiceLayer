@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.1.0" />
     <PackageReference Include="FluentValidation" Version="10.3.6" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.0" />
@@ -18,6 +19,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +27,133 @@
     <ProjectReference Include="..\TNCSC.Hulling.Components\TNCSC.Hulling.Components.csproj" />
     <ProjectReference Include="..\TNCSC.Hulling.Contracts\TNCSC.Hulling.Contracts.csproj" />
     <ProjectReference Include="..\TNCSC.Hulling.Domain\TNCSC.Hulling.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Templates\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DevExpress.Data.v22.1">
+      <HintPath>ReferenceDlls\DevExpress.Data.v22.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.DataVisualization.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.DataVisualization.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Docs.v22.1">
+      <HintPath>ReferenceDlls\DevExpress.Docs.v22.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Drawing.v22.1">
+      <HintPath>ReferenceDlls\DevExpress.Drawing.v22.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Office.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.Office.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.Pdf.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Pdf.v22.1.Drawing">
+      <HintPath>ReferenceDlls\DevExpress.Pdf.v22.1.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Printing.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.Printing.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.RichEdit.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.RichEdit.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Spreadsheet.v22.1.Core">
+      <HintPath>ReferenceDlls\DevExpress.Spreadsheet.v22.1.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraCharts.v22.1">
+      <HintPath>ReferenceDlls\DevExpress.XtraCharts.v22.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Core">
+      <HintPath>ReferenceDlls\DevExtreme.AspNet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExtreme.AspNet.Data">
+      <HintPath>ReferenceDlls\DevExtreme.AspNet.Data.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ReferenceDlls\DevExpress.Data.v22.1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Data.v22.1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.DataVisualization.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Docs.v22.1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Docs.v22.1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Drawing.v22.1.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Office.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Office.v22.1.Core.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Pdf.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Pdf.v22.1.Core.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Pdf.v22.1.Drawing.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Pdf.v22.1.Drawing.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Printing.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Printing.v22.1.Core.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.RichEdit.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.RichEdit.v22.1.Core.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Spreadsheet.v22.1.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.Spreadsheet.v22.1.Core.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.XtraCharts.v22.1.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExpress.XtraCharts.v22.1.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExtreme.AspNet.Core.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="ReferenceDlls\DevExtreme.AspNet.Data.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Templates\BillingReport.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\BillingReport.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\BillingReport1.docx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\EQSLogBookTemplates_en.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

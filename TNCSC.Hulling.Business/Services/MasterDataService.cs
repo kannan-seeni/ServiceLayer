@@ -49,5 +49,10 @@ namespace TNCSC.Hulling.Business.Services
         {
             return await masterDataRepository.GetAllRegionById(id);
         }
+
+        public async Task<APIResponse> GetBillingReportDetails()
+        {
+            return await masterDataRepository.GetBillingReportDetails();
+        }
     }
 }

@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.AspNetCore.Mvc;
 using TNCSC.Hulling.Business.Interfaces;
 using TNCSC.Hulling.Components.Filters;
 using TNCSC.Hulling.Contracts.V1;
 using TNCSC.Hulling.Domain.MasterData;
+using TNCSC.Hulling.ServiceLayer.Export;
 using TNCSC.Hulling.ServiceLayer.Filters;
 
 namespace TNCSC.Hulling.ServiceLayer.Controllers
@@ -107,6 +109,32 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
             var response = await masterDataService.GetAllRegionById(id);
 
             return Ok(response);
+
+        }
+        #endregion
+
+
+        #region GetAllRegion
+
+        [HttpGet(ApiRoutes.MasterData.GetBillingReportDetails)]
+        [ServiceFilter(typeof(AuditAttribute))]
+        public async Task<IActionResult> GetBillingReportDetails()
+        {
+            var response = await masterDataService.GetBillingReportDetails();
+
+
+            PrintBillingReport printBillingReport = new PrintBillingReport();
+
+            var s = printBillingReport.DownloadPDF(response.data);
+            AttachmentModel attachment = new AttachmentModel();
+            
+            attachment.FileContents = s;
+            attachment.FileType = "application/pdf";
+            attachment.FileName =  "Billing Report" + ".pdf";
+
+            return File(attachment.FileContents, attachment.FileType, attachment.FileName);
+
+             
 
         }
         #endregion

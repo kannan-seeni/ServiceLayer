@@ -168,8 +168,9 @@
 
             public const string getAllRegionDetails = Base + "/MasterData/Region";
 
-            public const string getAllRegionDetailsById = Base + "/MasterData/Region/{id}";
-
+            public const string getAllRegionDetailsById = Base + "/MasterData/Region/{id}"; 
+                      
+            public const string GetBillingReportDetails = Base + "/MasterData/Report/Billing";
 
         }
         #endregion

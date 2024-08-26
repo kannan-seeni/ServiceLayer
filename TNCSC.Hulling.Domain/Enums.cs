@@ -1,4 +1,6 @@
-﻿namespace TNCSC.Hulling.Domain
+﻿using System.Runtime.Serialization;
+
+namespace TNCSC.Hulling.Domain
 {
     /// <summary>
     /// Enums
@@ -43,5 +45,17 @@
             CR1007
         }
         #endregion
+
+        public enum Role : int
+        {
+            [EnumMember(Value = "Super Admin")]
+            SuperAdmin = 1,
+            [EnumMember(Value = "Admin")]
+            Admin,
+            [EnumMember(Value = "User")] 
+            User,
+            [EnumMember(Value = "Viewer")]
+            Viewer
+        }
     }
 }

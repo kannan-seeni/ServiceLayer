@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using TNCSC.Hulling.Components;
 using TNCSC.Hulling.Components.Interfaces;
 using TNCSC.Hulling.Components.Models;
 using TNCSC.Hulling.Domain;
 using TNCSC.Hulling.Domain.MasterData;
+using TNCSC.Hulling.Domain.Paddy;
+using TNCSC.Hulling.Domain.Reports;
 using TNCSC.Hulling.Repository.Helpers;
 using TNCSC.Hulling.Repository.Interfaces;
 using Grades = TNCSC.Hulling.Domain.MasterData.Grades;
@@ -125,7 +128,7 @@ namespace TNCSC.Hulling.Repository.Services
                     parameter.Add("@grade", grade.Grade, DbType.String, ParameterDirection.Input);
                     parameter.Add("@createdBy", this.UserId, DbType.Int64, ParameterDirection.Input);
                     parameter.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
-                    parameter.Add("@status", grade.Status, DbType.Boolean, ParameterDirection.Input); 
+                    parameter.Add("@status", grade.Status, DbType.Boolean, ParameterDirection.Input);
                     parameter.Add("@_id", -1, DbType.Int32, ParameterDirection.Output);
                     var grades = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_AddOrUpdateGrade", parameter, commandType: CommandType.StoredProcedure);
 
@@ -178,7 +181,7 @@ namespace TNCSC.Hulling.Repository.Services
                 throw;
             }
         }
-         
+
         public async Task<APIResponse> GetVarietyandGrades()
         {
             APIResponse aPIResponse = new APIResponse();
@@ -235,7 +238,7 @@ namespace TNCSC.Hulling.Repository.Services
             }
 
         }
-         
+
         public async Task<APIResponse> AddOrUpdateRegion(Region region)
         {
             APIResponse aPIResponse = new APIResponse();
@@ -311,7 +314,9 @@ namespace TNCSC.Hulling.Repository.Services
 
                 aPIResponse.data = regions;
 
+                var result = await GetBillingReportDetails();
 
+                aPIResponse.data = result.data;
                 return aPIResponse;
             }
             catch (Exception ex)
@@ -370,6 +375,151 @@ namespace TNCSC.Hulling.Repository.Services
                 aPIResponse.responseCode = ResponseCode.ExceptionOccursInGetRegionDetails;
                 aPIResponse.error = new ErrorModel(ex.Message, ResponseCode.ExceptionOccursInGetRegionDetails);
                 return aPIResponse;
+                throw;
+            }
+        }
+
+
+
+        public async Task<APIResponse> GetBillingReportDetails()
+        {
+            APIResponse aPIResponse = new APIResponse();
+            aPIResponse.version = sVersion;
+            List<PaddyBillingReport> report1 = new List<PaddyBillingReport>();
+            List<RiceBillingReport> report2 = new List<RiceBillingReport>();
+            List<BillingReport> report = new List<BillingReport>();
+
+            try
+            {
+
+                DynamicParameters parameters = new DynamicParameters();
+
+                var response = await SqlMapper.QueryMultipleAsync((SqlConnection)connection, "SP_Report_BillingReport", parameters, commandType: CommandType.StoredProcedure);
+
+                report1 = response.Read<PaddyBillingReport>().ToList();
+                report2 = response.Read<RiceBillingReport>().ToList();
+
+                var out1 = report1.Select(x => x.OutTurn).ToList();
+
+
+               // List<BillingPaddy> paddyReport = new List<BillingPaddy>();
+                List<BillingPaddy> riceReport = new List<BillingPaddy>();
+
+
+                List<BillingPaddy> paddyReport = report1
+                           .GroupBy(x => x.OutTurn)
+                           .Select((group, id) => new BillingPaddy
+                           {
+                               Id = id + 1,
+                               OutTurn = group.Key,
+                               TotalPaddyWeight = group.First().TotalPaddyWeight,
+                               DueDate = group.First().DueDate,
+                               Report = group.Select((item, j) => new PaddyReportForBill
+                               {
+                                   RowId = j + 1,
+                                   RowNumber = item.RowNumber,
+                                   Date = item.Date,
+                                   IssueMemoNo = item.IssueMemoNo,
+                                   PaddyWeight = item.PaddyWeight
+                               }).ToList()
+                           })
+                           .ToList();
+
+                out1 = out1.Distinct().ToList();
+                if (out1 != null && out1.Count() > 0)
+                {
+                    int id = 0;
+                    foreach (var it in out1)
+                    {
+
+                        id++;
+                        decimal sum = 0;
+                        BillingPaddy rBilling = new BillingPaddy
+                        {
+                            Report = new List<PaddyReportForBill>(),
+                            Id = id
+                        };
+
+                        var reportofRice = new List<RiceBillingReport>();
+
+                        foreach (var item2 in report2)
+                        {
+                            sum += item2.RiceWeight;
+
+                            if (sum <= it)
+                            {
+                                reportofRice.Add(item2);
+                                rBilling.Report.Add(new PaddyReportForBill
+                                {
+                                    RowId = rBilling.Report.Count + 1,
+                                    RowNumber = item2.RowNumber,
+                                    ADDate = item2.ADDate,
+                                    ADNumber = item2.ADNumber,
+                                    RiceWeight = item2.RiceWeight,
+                                    TotalWeight = sum
+                                });
+                                rBilling.TotalRiceWeight = sum;
+                            }
+                            else if (sum > it && sum != it)
+                            {
+
+                                var adjustedWeight = it - (sum - item2.RiceWeight);
+                                rBilling.Report.Add(new PaddyReportForBill
+                                {
+                                    RowId = rBilling.Report.Count + 1,
+                                    RowNumber = item2.RowNumber,
+                                    ADDate = item2.ADDate,
+                                    ADNumber = item2.ADNumber,
+                                    RiceWeight = adjustedWeight,
+                                    TotalWeight = (sum - item2.RiceWeight) + adjustedWeight
+                                });
+                                rBilling.TotalRiceWeight = (sum - item2.RiceWeight) + adjustedWeight;
+                                item2.RiceWeight -= adjustedWeight;
+                                break;
+                            }
+                        }
+                         
+                        riceReport.Add(rBilling);
+                        report2.RemoveAll(x => reportofRice.Any(y => x.RowNumber == y.RowNumber));
+
+                    }
+
+                }
+ 
+                foreach (var item in paddyReport)
+                {
+                    var matchingRiceReports = riceReport
+                        .Where(x => x.Id == item.Id)
+                        .SelectMany(r => r.Report)
+                        .ToDictionary(r => r.RowId);
+
+                    foreach (var i in item.Report)
+                    {
+                        if (matchingRiceReports.TryGetValue(i.RowId, out var matchingRiceReport))
+                        {
+                            // Update report based on matchingRiceReport
+                            i.ADNumber = matchingRiceReport.ADNumber;
+                            i.ADDate = matchingRiceReport.ADDate;
+                            i.RiceWeight = matchingRiceReport.RiceWeight;
+                            i.TotalWeight = matchingRiceReport.TotalWeight;
+                            item.TotalRiceWeight += matchingRiceReport.RiceWeight;
+                        }
+                        
+                    }
+
+                    // Set or ensure values for each item
+                    item.DueDate = item.DueDate;
+                    item.OutTurn = item.OutTurn;
+                    item.TotalPaddyWeight = item.TotalPaddyWeight;
+                }
+                 
+                aPIResponse.data = paddyReport;
+                return aPIResponse;
+
+            }
+            catch (Exception ex)
+            {
+
                 throw;
             }
         }
