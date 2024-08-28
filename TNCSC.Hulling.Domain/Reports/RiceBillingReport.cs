@@ -7,5 +7,7 @@
         public DateTime ADDate { get; set; }
         public decimal RiceWeight { get; set; }
         public decimal TotalRiceWeight { get; set; }
+        public bool IsToNextReport { get; set; }
+        public string ReportMonth { get; set; }
     }
 }

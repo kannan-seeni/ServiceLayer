@@ -3,16 +3,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
+using System.Globalization;
+using System.Text.Json;
 using TNCSC.Hulling.Components;
 using TNCSC.Hulling.Components.Interfaces;
 using TNCSC.Hulling.Components.Models;
 using TNCSC.Hulling.Domain;
 using TNCSC.Hulling.Domain.MasterData;
-using TNCSC.Hulling.Domain.Paddy;
 using TNCSC.Hulling.Domain.Reports;
 using TNCSC.Hulling.Repository.Helpers;
 using TNCSC.Hulling.Repository.Interfaces;
+using static Dapper.SqlMapper;
 using Grades = TNCSC.Hulling.Domain.MasterData.Grades;
 using GunnyCondition = TNCSC.Hulling.Domain.MasterData.GunnyCondition;
 using Variety = TNCSC.Hulling.Domain.MasterData.Variety;
@@ -314,9 +315,6 @@ namespace TNCSC.Hulling.Repository.Services
 
                 aPIResponse.data = regions;
 
-                var result = await GetBillingReportDetails();
-
-                aPIResponse.data = result.data;
                 return aPIResponse;
             }
             catch (Exception ex)
@@ -381,7 +379,7 @@ namespace TNCSC.Hulling.Repository.Services
 
 
 
-        public async Task<APIResponse> GetBillingReportDetails()
+        public async Task<APIResponse> GetBillingReportDetails(BillingReportRequest reportRequest)
         {
             APIResponse aPIResponse = new APIResponse();
             aPIResponse.version = sVersion;
@@ -392,128 +390,251 @@ namespace TNCSC.Hulling.Repository.Services
             try
             {
 
-                DynamicParameters parameters = new DynamicParameters();
 
-                var response = await SqlMapper.QueryMultipleAsync((SqlConnection)connection, "SP_Report_BillingReport", parameters, commandType: CommandType.StoredProcedure);
+                DynamicParameters parameters = new DynamicParameters();
+                DynamicParameters parameter = new DynamicParameters();
+                GridReader response;
+                int isPreviousMonthReportGenerated = 0;
+                bool isRange = false;
+                if (!string.IsNullOrEmpty(reportRequest.MonthFrom) && !string.IsNullOrEmpty(reportRequest.MonthTo))
+                {
+                    isRange = true;
+                }
+                 
+                    parameter.Add("@monthFrom", reportRequest.MonthFrom, DbType.String, ParameterDirection.Input);
+                    parameter.Add("@monthTo", reportRequest.MonthTo, DbType.String, ParameterDirection.Input);
+                    parameter.Add("@isRange", isRange, DbType.Boolean, ParameterDirection.Input);
+                    parameter.Add("@variety", reportRequest.Grade, DbType.String, ParameterDirection.Input);
+                    parameter.Add("@millRefID", reportRequest.MillId, DbType.Int64, ParameterDirection.Input);
+                    parameter.Add("@IspreReportGenerated", -1, DbType.Int32, ParameterDirection.Output);
+                    response = await SqlMapper.QueryMultipleAsync((SqlConnection)connection, "SP_Report_BillingReport", parameter, commandType: CommandType.StoredProcedure);
+                   // var id = parameter.Get<Int32>("@IspreReportGenerated");
+                    isPreviousMonthReportGenerated = 1;
+                
+                //else
+                //{
+                    
+                //    parameters.Add("@month", reportRequest.Reportmonth, DbType.String, ParameterDirection.Input);
+                //    parameters.Add("@variety", reportRequest.Grade, DbType.String, ParameterDirection.Input);
+                //    parameters.Add("@millRefID", reportRequest.MillId, DbType.Int64, ParameterDirection.Input); 
+                //    parameters.Add("@IspreReportGenerated", -1, DbType.Int32, ParameterDirection.Output);
+
+                //    response = await SqlMapper.QueryMultipleAsync((SqlConnection)connection, "SP_Report_BillingReport", parameters, commandType: CommandType.StoredProcedure);
+                //   // var id = parameters.Get<Int32>("@IspreReportGenerated");
+                //    isPreviousMonthReportGenerated = 1;
+                //}
 
                 report1 = response.Read<PaddyBillingReport>().ToList();
                 report2 = response.Read<RiceBillingReport>().ToList();
 
-                var out1 = report1.Select(x => x.OutTurn).ToList();
+                // var Id = parameters.Get<Int32>("@reportAdded");
 
+               
+                
 
-               // List<BillingPaddy> paddyReport = new List<BillingPaddy>();
-                List<BillingPaddy> riceReport = new List<BillingPaddy>();
-
-
-                List<BillingPaddy> paddyReport = report1
-                           .GroupBy(x => x.OutTurn)
-                           .Select((group, id) => new BillingPaddy
-                           {
-                               Id = id + 1,
-                               OutTurn = group.Key,
-                               TotalPaddyWeight = group.First().TotalPaddyWeight,
-                               DueDate = group.First().DueDate,
-                               Report = group.Select((item, j) => new PaddyReportForBill
-                               {
-                                   RowId = j + 1,
-                                   RowNumber = item.RowNumber,
-                                   Date = item.Date,
-                                   IssueMemoNo = item.IssueMemoNo,
-                                   PaddyWeight = item.PaddyWeight
-                               }).ToList()
-                           })
-                           .ToList();
-
-                out1 = out1.Distinct().ToList();
-                if (out1 != null && out1.Count() > 0)
+                if (isPreviousMonthReportGenerated == 1)
                 {
-                    int id = 0;
-                    foreach (var it in out1)
+                    var monthReport = report1.GroupBy(x => x.Date.ToString("MMM-yy")).ToList();
+                    List<BillingPaddy> riceReportFinal = new List<BillingPaddy>();
+                    List<BillingPaddy> paddyReportFinal = new List<BillingPaddy>();
+                    
+                    foreach (var month in monthReport)
                     {
+                        List<BillingPaddy> riceReport = new List<BillingPaddy>();
+                        List<BillingPaddy> paddyReport = new List<BillingPaddy>();
+                        paddyReport = month
+                                   .GroupBy(x => x.OutTurn)
+                                   .Select((group, id) => new BillingPaddy
+                                   {
+                                       Id = id + 1,
+                                       OutTurn = group.Key,
+                                       TotalPaddyWeight = group.First().TotalPaddyWeight,
+                                       DueDate = group.First().DueDate,
+                                       Report = group.Select((item, j) => new PaddyReportForBill
+                                       {
+                                           RowId = j + 1,
+                                           RowNumber = item.RowNumber,
+                                           Date = item.Date,
+                                           IssueMemoNo = item.IssueMemoNo,
+                                           PaddyWeight = item.PaddyWeight
+                                       }).ToList()
+                                   })
+                                   .ToList();
+                       // paddyReportFinal.AddRange(paddyReport);
 
-                        id++;
-                        decimal sum = 0;
-                        BillingPaddy rBilling = new BillingPaddy
+                        var out1 = paddyReport.Select(x => x.OutTurn).ToList();
+                        out1 = out1.Distinct().ToList();
+                        var reportBalance = new List<ReportBalance>();
+                        if (out1 != null && out1.Count() > 0)
                         {
-                            Report = new List<PaddyReportForBill>(),
-                            Id = id
-                        };
-
-                        var reportofRice = new List<RiceBillingReport>();
-
-                        foreach (var item2 in report2)
-                        {
-                            sum += item2.RiceWeight;
-
-                            if (sum <= it)
-                            {
-                                reportofRice.Add(item2);
-                                rBilling.Report.Add(new PaddyReportForBill
-                                {
-                                    RowId = rBilling.Report.Count + 1,
-                                    RowNumber = item2.RowNumber,
-                                    ADDate = item2.ADDate,
-                                    ADNumber = item2.ADNumber,
-                                    RiceWeight = item2.RiceWeight,
-                                    TotalWeight = sum
-                                });
-                                rBilling.TotalRiceWeight = sum;
-                            }
-                            else if (sum > it && sum != it)
+                            int id = 0;
+                            foreach (var it in out1)
                             {
 
-                                var adjustedWeight = it - (sum - item2.RiceWeight);
-                                rBilling.Report.Add(new PaddyReportForBill
+                                id++;
+                                decimal sum = 0;
+                                BillingPaddy rBilling = new BillingPaddy
                                 {
-                                    RowId = rBilling.Report.Count + 1,
-                                    RowNumber = item2.RowNumber,
-                                    ADDate = item2.ADDate,
-                                    ADNumber = item2.ADNumber,
-                                    RiceWeight = adjustedWeight,
-                                    TotalWeight = (sum - item2.RiceWeight) + adjustedWeight
-                                });
-                                rBilling.TotalRiceWeight = (sum - item2.RiceWeight) + adjustedWeight;
-                                item2.RiceWeight -= adjustedWeight;
-                                break;
+                                    Report = new List<PaddyReportForBill>(),
+                                    Id = id
+                                };
+
+                                var reportofRice = new List<RiceBillingReport>();
+
+                                foreach (var item2 in report2)
+                                {
+                                    sum += item2.RiceWeight;
+
+                                    if (sum <= it)
+                                    {
+                                        reportofRice.Add(item2);
+                                        rBilling.Report.Add(new PaddyReportForBill
+                                        {
+                                            RowId = rBilling.Report.Count + 1,
+                                            RowNumber = item2.RowNumber,
+                                            ADDate = item2.ADDate,
+                                            ADNumber = item2.ADNumber,
+                                            RiceWeight = item2.RiceWeight,
+                                            TotalWeight = sum
+                                        });
+                                        rBilling.TotalRiceWeight = sum;
+
+                                        ReportBalance balance = new ReportBalance();
+                                        if (!item2.IsToNextReport)
+                                        {
+                                            balance.ADNo = item2.ADNumber;
+                                            balance.ReportMonth = month.Key;
+                                            balance.ReportBalanceDue = 0;
+                                            balance.IsToNextReport = false;
+                                            balance.IsReportedMonth = item2.ReportMonth;
+                                            reportBalance.Add(balance);
+                                        }
+
+
+                                    }
+                                    else if (sum > it && sum != it)
+                                    {
+
+                                        var adjustedWeight = it - (sum - item2.RiceWeight);
+                                        rBilling.Report.Add(new PaddyReportForBill
+                                        {
+                                            RowId = rBilling.Report.Count + 1,
+                                            RowNumber = item2.RowNumber,
+                                            ADDate = item2.ADDate,
+                                            ADNumber = item2.ADNumber,
+                                            RiceWeight = adjustedWeight,
+                                            TotalWeight = (sum - item2.RiceWeight) + adjustedWeight
+                                        });
+                                        rBilling.TotalRiceWeight = (sum - item2.RiceWeight) + adjustedWeight;
+                                        item2.RiceWeight -= adjustedWeight;
+
+                                        ReportBalance balance = new ReportBalance();
+                                        balance.ADNo = item2.ADNumber;
+                                        balance.ReportBalanceDue = item2.RiceWeight;
+                                        balance.ReportMonth = month.Key;
+                                        balance.IsToNextReport = false;
+                                        balance.IsReportedMonth = item2.ReportMonth;
+                                        reportBalance.Add(balance);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                riceReport.Add(rBilling);
+                                report2.RemoveAll(x => reportofRice.Any(y => x.RowNumber == y.RowNumber));
+
                             }
+                            //riceReportFinal.AddRange(riceReport);
+
                         }
-                         
-                        riceReport.Add(rBilling);
-                        report2.RemoveAll(x => reportofRice.Any(y => x.RowNumber == y.RowNumber));
 
-                    }
-
-                }
- 
-                foreach (var item in paddyReport)
-                {
-                    var matchingRiceReports = riceReport
-                        .Where(x => x.Id == item.Id)
-                        .SelectMany(r => r.Report)
-                        .ToDictionary(r => r.RowId);
-
-                    foreach (var i in item.Report)
-                    {
-                        if (matchingRiceReports.TryGetValue(i.RowId, out var matchingRiceReport))
+                        foreach (var item in paddyReport)
                         {
-                            // Update report based on matchingRiceReport
-                            i.ADNumber = matchingRiceReport.ADNumber;
-                            i.ADDate = matchingRiceReport.ADDate;
-                            i.RiceWeight = matchingRiceReport.RiceWeight;
-                            i.TotalWeight = matchingRiceReport.TotalWeight;
-                            item.TotalRiceWeight += matchingRiceReport.RiceWeight;
-                        }
-                        
-                    }
+                            var matchingRiceReports = riceReport
+                                .Where(x => x.Id == item.Id)
+                                .SelectMany(r => r.Report)
+                                .ToDictionary(r => r.RowId);
 
-                    // Set or ensure values for each item
-                    item.DueDate = item.DueDate;
-                    item.OutTurn = item.OutTurn;
-                    item.TotalPaddyWeight = item.TotalPaddyWeight;
+                            var notmatchingRiceReports = riceReport
+                                .Where(x => x.Id == item.Id)
+                                .SelectMany(r => r.Report)
+                                .Where(r => !item.Report.Any(y => y.RowId == r.RowId));
+
+
+                            foreach (var i in item.Report)
+                            {
+                                if (matchingRiceReports.TryGetValue(i.RowId, out var matchingRiceReport))
+                                {
+                                    // Update report based on matchingRiceReport
+                                    i.ADNumber = matchingRiceReport.ADNumber;
+                                    i.ADDate = matchingRiceReport.ADDate;
+                                    i.RiceWeight = matchingRiceReport.RiceWeight;
+                                    i.TotalWeight = matchingRiceReport.TotalWeight;
+                                    item.TotalRiceWeight += matchingRiceReport.RiceWeight;
+                                }
+
+                            }
+                            if (matchingRiceReports.Count() > item.Report.Count())
+                            {
+                                foreach (var notmatch in notmatchingRiceReports)
+                                {
+                                    PaddyReportForBill reportForBill = new PaddyReportForBill();
+                                    reportForBill.RowId = notmatch.RowId;
+                                    reportForBill.ADNumber = notmatch.ADNumber;
+                                    reportForBill.ADDate = notmatch.ADDate;
+                                    reportForBill.RiceWeight = notmatch.RiceWeight;
+                                    reportForBill.TotalWeight = notmatch.TotalWeight;
+                                    item.TotalRiceWeight += notmatch.RiceWeight;
+                                    item.Report.Add(reportForBill);
+                                }
+
+
+                            }
+
+                            // Set or ensure values for each item
+                            item.DueDate = item.DueDate;
+                            item.OutTurn = item.OutTurn;
+                            item.TotalPaddyWeight = item.TotalPaddyWeight;
+                        }
+
+                        paddyReportFinal.AddRange(paddyReport);
+                         bool m = reportBalance.Any(x => x.IsReportedMonth == null);
+
+                        if (m && reportBalance.Count() > 0)
+                        {
+                            if(monthReport != null && monthReport.Count > 1)
+                            {
+                                report2[0].IsToNextReport = true;
+                                report2[0].ReportMonth = month.Key;
+                                
+                            }
+                            if (reportBalance[reportBalance.Count - 1].ReportBalanceDue != 0)
+                            {
+                                reportBalance[reportBalance.Count - 1].IsToNextReport = true;
+                            }
+                            string jsonString = JsonSerializer.Serialize(reportBalance, new JsonSerializerOptions { WriteIndented = true });
+                            await UpdateReportBalance(reportRequest.MillId, jsonString);
+                        }
+                    }
+                    aPIResponse.data = paddyReportFinal;
+
+
                 }
-                 
-                aPIResponse.data = paddyReport;
+                else if(isPreviousMonthReportGenerated == 2)
+                {
+                    aPIResponse.data = null;
+                    aPIResponse.responseCode = ResponseCode.NoTransactionBasedOnThisMonth;
+                }
+                else
+                {
+                    aPIResponse.data = null;
+                    aPIResponse.responseCode = ResponseCode.PreviousMonthReportNotGenerated;
+                }
+
+                
                 return aPIResponse;
 
             }
@@ -524,5 +645,56 @@ namespace TNCSC.Hulling.Repository.Services
             }
         }
 
+
+        public async Task<APIResponse> UpdateReportBalance(long millId, string jsonStr)
+        {
+            APIResponse aPIResponse = new APIResponse();
+            aPIResponse.version = sVersion;
+
+            try
+            {
+                if (!string.IsNullOrEmpty(jsonStr))
+                {
+                    DynamicParameters parameters = new DynamicParameters();
+
+                    parameters.Add("@millId", millId, DbType.Int64, ParameterDirection.Input);
+                    parameters.Add("@json", jsonStr, DbType.String, ParameterDirection.Input);
+                    parameters.Add("@modifiedBy ", this.UserId, DbType.Int64, ParameterDirection.Input);
+
+                    var response = await SqlMapper.ExecuteAsync((SqlConnection)connection, "SP_UpdateReportBalance", parameters, commandType: CommandType.StoredProcedure);
+
+
+
+                    aPIResponse.data = 1;
+                    aPIResponse.responseCode = ResponseCode.RegionAddedOrUpdatedSuccessfully;
+                }
+                else
+                {
+                    aPIResponse.data = 0;
+                    aPIResponse.responseCode = ResponseCode.UnableToAddOrUpdateRegion;
+                }
+
+
+                return aPIResponse;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public string GetNextMonth(string month)
+        {
+            string reportMonth = "feb-24";
+
+            DateTime currentMonth = DateTime.ParseExact(month, "MMM-yy", CultureInfo.InvariantCulture);
+            DateTime nextMonth = currentMonth.AddMonths(1);
+
+            string nextMonthString = nextMonth.ToString("MMM-yy", CultureInfo.InvariantCulture);
+
+            return nextMonthString;
+
+        }
     }
 }

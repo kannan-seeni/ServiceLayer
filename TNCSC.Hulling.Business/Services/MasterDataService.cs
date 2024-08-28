@@ -1,6 +1,7 @@
 ﻿using TNCSC.Hulling.Business.Interfaces;
 using TNCSC.Hulling.Domain;
 using TNCSC.Hulling.Domain.MasterData;
+using TNCSC.Hulling.Domain.Reports;
 using TNCSC.Hulling.Repository.Interfaces;
 using Grades = TNCSC.Hulling.Domain.MasterData.Grades;
 
@@ -50,9 +51,9 @@ namespace TNCSC.Hulling.Business.Services
             return await masterDataRepository.GetAllRegionById(id);
         }
 
-        public async Task<APIResponse> GetBillingReportDetails()
+        public async Task<APIResponse> GetBillingReportDetails(BillingReportRequest reportRequest)
         {
-            return await masterDataRepository.GetBillingReportDetails();
+            return await masterDataRepository.GetBillingReportDetails(reportRequest);
         }
     }
 }

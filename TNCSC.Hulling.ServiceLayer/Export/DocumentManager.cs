@@ -1,12 +1,10 @@
-﻿using DapperExtensions.Mapper;
-using static System.Net.Mime.MediaTypeNames;
-using System.Text.RegularExpressions;
-using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
-using DevExpress.XtraSpreadsheet.Import.Xls;
-using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
+using Microsoft.IdentityModel.Tokens;
+using System.Text.RegularExpressions;
 using TNCSC.Hulling.Domain.Reports;
+using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
+using Text = DocumentFormat.OpenXml.Wordprocessing.Text;
 
 namespace TNCSC.Hulling.ServiceLayer.Export
 {
@@ -183,9 +181,9 @@ namespace TNCSC.Hulling.ServiceLayer.Export
                         for (int j = 0; j < report.Count(); j++)
                         {
                             UpdateCellValue(BillingTableTable2, (j+1).ToString() , runProperties, false, j , 0);
-                            UpdateCellValue(BillingTableTable2, report[j].Date.ToString("dd-MM-yy"), runProperties, false, j , 1);
-                            UpdateCellValue(BillingTableTable2, report[j].IssueMemoNo, runProperties, false, j, 2);
-                            UpdateCellValue(BillingTableTable2, report[j].PaddyWeight.ToString("F3"), runProperties, false, j , 3);
+                            UpdateCellValue(BillingTableTable2, (report[j].Date.ToString("dd-MM-yy") == "01-01-01") ? " " : report[j].Date.ToString("dd-MM-yy"), runProperties, false, j , 1);
+                            UpdateCellValue(BillingTableTable2, string.IsNullOrEmpty(report[j].IssueMemoNo) ? " " : report[j].IssueMemoNo, runProperties, false, j, 2);
+                            UpdateCellValue(BillingTableTable2, (report[j].PaddyWeight.ToString("F3") == "0.000") ? " " : report[j].PaddyWeight.ToString("F3"), runProperties, false, j , 3);
                             UpdateCellValue(BillingTableTable2, string.IsNullOrEmpty(report[j].ADNumber) ? " " : report[j].ADNumber, runProperties, false, j , 6);
                             UpdateCellValue(BillingTableTable2, (report[j].ADDate.ToString("dd-MM-yy") == "01-01-01") ? " " : report[j].ADDate.ToString("dd-MM-yy"), runProperties, false, j , 7);
                             UpdateCellValue(BillingTableTable2, (report[j].RiceWeight.ToString("F3") == "0.000") ? " " : report[j].RiceWeight.ToString("F3"), runProperties, false, j , 8);
@@ -200,7 +198,7 @@ namespace TNCSC.Hulling.ServiceLayer.Export
                         UpdateCellValue(BillingTableTable3, ((int)Math.Round(details[i].TotalPaddyWeight)).ToString(), runProperties, false, 0, 2);
                         UpdateCellValue(BillingTableTable3, ((int)Math.Round(details[i].OutTurn)).ToString(), runProperties, false, 0, 3);
                         UpdateCellValue(BillingTableTable3, details[i].DueDate.ToString("dd-MM-yy"), runProperties, false, 0, 4);
-                       // UpdateCellValue(BillingTableTable3, details[i].TotalRiceWeight.ToString("F3"), runProperties, false, 0, 4);
+                        
                     }
                    
                     if (i < details.Count() - 1)
@@ -251,7 +249,7 @@ namespace TNCSC.Hulling.ServiceLayer.Export
                     var tableRow = table.Descendants<TableRow>().ElementAt(rowIndex);
 
                     TableRowProperties rowProperties = new TableRowProperties();
-                    TableRowHeight rowHeight = new TableRowHeight() { Val = 200, HeightType = HeightRuleValues.AtLeast };
+                    TableRowHeight rowHeight = new TableRowHeight() { Val = 300, HeightType = HeightRuleValues.AtLeast };
                     rowProperties.Append(rowHeight);
                     if (tableRow.GetFirstChild<TableRowProperties>() == null)
                     {
@@ -596,5 +594,54 @@ namespace TNCSC.Hulling.ServiceLayer.Export
 
         }
         #endregion
+
+
+        public void UpdateHeaderDetail(WordprocessingDocument document, string key, string value)
+        {
+            try
+            {
+                var headers = document.MainDocumentPart.HeaderParts;
+
+                foreach (var header in headers)
+                {
+                    // Get all paragraphs in the header
+                    var paragraphs = header.Header.Descendants<Paragraph>();
+
+                    foreach (var paragraph in paragraphs)
+                    {
+                        foreach (var text in paragraph.Descendants<Text>())
+                        {
+                            // Check if the text contains the placeholder
+                            if (text.Text.Contains(key))
+                            {
+                                // Replace the placeholder with the new text
+                                text.Text = text.Text.Replace(key, value);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public void UpdateHeader(WordprocessingDocument mainDocument, string month, string variety, string millname)
+        {
+            try
+            {
+
+                UpdateHeaderDetail(mainDocument, "##month##", month);
+                UpdateHeaderDetail(mainDocument, "##millname##", millname);
+                UpdateHeaderDetail(mainDocument, "##grade##", (variety == "ADT") ? "A" : variety);
+
+            }
+            catch (Exception)
+            {
+                throw;
+
+            }
+        }
     }
 }

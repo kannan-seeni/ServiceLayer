@@ -1,6 +1,4 @@
-﻿using DevExpress.Xpo.DB.Helpers;
-using DevExpress.XtraRichEdit;
-using DevExpress.XtraRichEdit.Import.Html;
+﻿using DevExpress.XtraRichEdit;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
@@ -21,30 +19,16 @@ namespace TNCSC.Hulling.ServiceLayer.Export
         public PrintBillingReport()
         {
             
-            FontSize ofont = new FontSize() { Val = "18.5" };
+            FontSize ofont = new FontSize() { Val = "20" };
             RunFonts runFont = new RunFonts { Ascii = "Poppins" };
             Justification justification1 = new Justification() { Val = JustificationValues.Center };
             ParagraphProperties User_heading = new ParagraphProperties();
             User_heading.Justification = justification1;
             runPropertiesValues.FontSize = ofont;
             runPropertiesValues.RunFonts = runFont;
-            SpacingBetweenLines spacing = new SpacingBetweenLines()
-            {
-                Before = "0",   // Spacing before in twentieths of a point (e.g., 200 = 10 points)
-                After = "0",    // Spacing after in twentieths of a point
-                Line = "0",     // Line spacing in twentieths of a point
-                LineRule = LineSpacingRuleValues.Exact  // Line spacing rule (Auto, Exactly, AtLeast)
-            };
-
-            // Add the SpacingBetweenLines to RunProperties
-            runPropertiesValues.Append(spacing);
-
-            //FontSize ofont1 = new FontSize() { Val = "15.5" };
-            //RunFonts runFont1 = new RunFonts { Ascii = "Poppins" };
-            //runPropertiesHeading.FontSize = ofont1;
-            //runPropertiesHeading.RunFonts = runFont1;
-            //Color c = new Color() { Val = "#808080" };
-            //runPropertiesHeading.Append(c);
+             
+            Color c = new Color() { Val = "#808080" };
+            runPropertiesValues.Append(c);
 
         }
         #endregion
@@ -55,7 +39,7 @@ namespace TNCSC.Hulling.ServiceLayer.Export
         /// </summary>
         /// <param name="orderDetails"></param>
         /// <returns></returns>
-        public byte[] DownloadPDF(List<BillingPaddy> Details)
+        public byte[] DownloadPDF(List<BillingPaddy> Details,string month,string variety)
         {
             string rootFolder = Directory.GetCurrentDirectory();
               
@@ -80,6 +64,9 @@ namespace TNCSC.Hulling.ServiceLayer.Export
 
                     List<string> cptions2 = new List<string>() {"BillingTable2", "BillingTable3" };
                     AddTableProperties(table2, cptions2);
+ 
+                    documentManager.UpdateHeader(mainDocument, month, variety, "KARTHIKEYAN MODERN RICE MILL");
+
 
                     documentManager.UpdateArtcicles(mainDocument, Details, runPropertiesValues);
 

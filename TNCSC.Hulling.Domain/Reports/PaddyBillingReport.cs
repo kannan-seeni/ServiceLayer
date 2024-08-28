@@ -40,6 +40,8 @@ namespace TNCSC.Hulling.Domain.Reports
         public DateTime ADDate { get; set; }
         public decimal RiceWeight { get; set; }
         public decimal TotalWeight { get; set; }
+        public bool IsToNextReport { get; set; }
+        public string ReportMonth { get; set; }
 
     }
 }

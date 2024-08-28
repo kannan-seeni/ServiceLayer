@@ -170,7 +170,7 @@
 
             public const string getAllRegionDetailsById = Base + "/MasterData/Region/{id}"; 
                       
-            public const string GetBillingReportDetails = Base + "/MasterData/Report/Billing";
+            public const string GetBillingReportDetails = Base + "/Report/Billing";
 
         }
         #endregion

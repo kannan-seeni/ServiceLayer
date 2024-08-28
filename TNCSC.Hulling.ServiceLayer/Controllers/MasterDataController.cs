@@ -4,6 +4,8 @@ using TNCSC.Hulling.Business.Interfaces;
 using TNCSC.Hulling.Components.Filters;
 using TNCSC.Hulling.Contracts.V1;
 using TNCSC.Hulling.Domain.MasterData;
+using TNCSC.Hulling.Domain.Reports;
+using TNCSC.Hulling.Repository.Helpers;
 using TNCSC.Hulling.ServiceLayer.Export;
 using TNCSC.Hulling.ServiceLayer.Filters;
 
@@ -116,25 +118,42 @@ namespace TNCSC.Hulling.ServiceLayer.Controllers
 
         #region GetAllRegion
 
-        [HttpGet(ApiRoutes.MasterData.GetBillingReportDetails)]
+        [HttpPost(ApiRoutes.MasterData.GetBillingReportDetails)]
         [ServiceFilter(typeof(AuditAttribute))]
-        public async Task<IActionResult> GetBillingReportDetails()
+        public async Task<IActionResult> GetBillingReportDetails([FromBody]BillingReportRequest reportRequest)
         {
-            var response = await masterDataService.GetBillingReportDetails();
+            var response = await masterDataService.GetBillingReportDetails(reportRequest);
 
+            if(response.data != null)
+            {
+                PrintBillingReport printBillingReport = new PrintBillingReport();
+                var s = printBillingReport.DownloadPDF(response.data, reportRequest.Reportmonth, reportRequest.Grade);
+                AttachmentModel attachment = new AttachmentModel();
 
-            PrintBillingReport printBillingReport = new PrintBillingReport();
+                attachment.FileContents = s;
+                attachment.FileType = "application/pdf";
+                attachment.FileName = "Billing Report" + "_" + reportRequest.Reportmonth + " (" + (reportRequest.Grade == "ADT" ? "A" : reportRequest.Grade) + "-Grade" + ")" + ".pdf";
 
-            var s = printBillingReport.DownloadPDF(response.data);
-            AttachmentModel attachment = new AttachmentModel();
-            
-            attachment.FileContents = s;
-            attachment.FileType = "application/pdf";
-            attachment.FileName =  "Billing Report" + ".pdf";
-
-            return File(attachment.FileContents, attachment.FileType, attachment.FileName);
-
-             
+                return File(attachment.FileContents, attachment.FileType, attachment.FileName);
+            }
+            else
+            {
+                if(response.responseCode == ResponseCode.PreviousMonthReportNotGenerated)
+                {
+                    response.data = "You didn't Generated the privious month report";
+                    return Ok(response);
+                }else if(response.responseCode == ResponseCode.NoTransactionBasedOnThisMonth)
+                {
+                    response.data = "No transaction found for this month";
+                    return Ok(response);
+                }
+                else
+                {
+                    return Ok(response);
+                }
+                
+            }
+ 
 
         }
         #endregion

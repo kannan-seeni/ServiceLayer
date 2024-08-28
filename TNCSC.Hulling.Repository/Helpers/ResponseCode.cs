@@ -140,5 +140,9 @@
         public const int RegionDetailsRetrivedSuccessfully = 18014;
         public const int NoRegionFound = 18015;
         public const int ExceptionOccursInGetRegionDetails = 18016;
+
+        //Reports 19000-191000
+        public const int PreviousMonthReportNotGenerated = 19000;
+        public const int NoTransactionBasedOnThisMonth = 19001;
     }
 }

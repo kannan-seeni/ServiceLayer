@@ -1,5 +1,6 @@
 ﻿using TNCSC.Hulling.Domain;
 using TNCSC.Hulling.Domain.MasterData;
+using TNCSC.Hulling.Domain.Reports;
 
 namespace TNCSC.Hulling.Repository.Interfaces
 {
@@ -12,7 +13,6 @@ namespace TNCSC.Hulling.Repository.Interfaces
         public Task<APIResponse> AddOrUpdateRegion(Region region);
         public Task<APIResponse> GetAllRegion();
         public Task<APIResponse> GetAllRegionById(int id);
-
-        public Task<APIResponse> GetBillingReportDetails();
+        public Task<APIResponse> GetBillingReportDetails(BillingReportRequest reportRequest);
     }
 }
